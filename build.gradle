@@ -8,6 +8,10 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+    maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
+    maven { url 'http://maven.aliyun.com/nexus/content/repositories/gradle-plugin' }
     mavenCentral()
 }
 
@@ -21,3 +25,8 @@ test {
         events "passed", "skipped", "failed"
     }
 }
+
+tasks.withType (JavaCompile) {
+    options.encoding("UTF-8");
+}
+
