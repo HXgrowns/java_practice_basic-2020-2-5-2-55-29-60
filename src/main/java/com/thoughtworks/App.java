@@ -1,6 +1,5 @@
 package com.thoughtworks;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -25,30 +24,30 @@ public class App {
         String[] itemIds = getItemIds();
         String[] itemNames = getItemNames();
         double[] itemPrices = getItemPrices();
-        double total = 0.0;
+        double totalSpend = 0.0;
         double discountHalf = 0.0;
         String result = "============= 订餐明细 =============\n";
         for (String itemId : itemId2count.keySet()) {
             Integer itemCount = itemId2count.get(itemId);
             for (int i = 0; i < itemIds.length; i++) {
                 if (itemId.equals(itemIds[i])) {
-                    total += calculateEverMoney(itemCount, itemPrices[i]);
+                    totalSpend += calculatEverySpend(itemCount, itemPrices[i]);
                     discountHalf += discountHalfReduce(itemId, itemCount, itemPrices[i]);
-                    result += printSection1(itemNames[i], itemCount, calculateEverMoney(itemCount, itemPrices[i]));
+                    result += printSelectedItems(itemNames[i], itemCount, calculatEverySpend(itemCount, itemPrices[i]));
                     break;
                 }
             }
         }
-        double discountFull = discountFullReduce(total);
+        double discountFull = discountFullReduce(totalSpend);
 
-        if (discountFull == discountHalf && discountFull == total) {
-          result += printSection3(total);
+        if (discountFull == discountHalf && discountFull == totalSpend) {
+          result += printTotalSpend(totalSpend);
         } else if (discountFull > discountHalf) {
-            result += printSection2("指定菜品半价(黄焖鸡，凉皮)", (total - discountHalf));
-            result += printSection3(discountHalf);
+            result += printDiscountMethod("指定菜品半价(黄焖鸡，凉皮)", (totalSpend - discountHalf));
+            result += printTotalSpend(discountHalf);
         } else {
-            result += printSection2("满30减6元", (total - discountFull));
-            result += printSection3(discountFull);
+            result += printDiscountMethod("满30减6元", (totalSpend - discountFull));
+            result += printTotalSpend(discountFull);
         }
         return result;
     }
@@ -78,7 +77,7 @@ public class App {
      * @param itemPrice
      * @return
      */
-    public static double calculateEverMoney(Integer itemCount, double itemPrice) {
+    public static double calculatEverySpend(Integer itemCount, double itemPrice) {
         return itemCount * itemPrice;
     }
 
@@ -118,7 +117,7 @@ public class App {
      * @param itemMoney
      * @return
      */
-    public static String printSection1(String itemName, Integer itemCount, double itemMoney) {
+    public static String printSelectedItems(String itemName, Integer itemCount, double itemMoney) {
         return itemName + " x " + itemCount + " = " + doubleTrans(itemMoney) + "元\n";
     }
 
@@ -129,7 +128,7 @@ public class App {
      * @param reduceMoney
      * @return
      */
-    public static String printSection2(String discountMathod, double reduceMoney) {
+    public static String printDiscountMethod(String discountMathod, double reduceMoney) {
         return "-----------------------------------\n"
                 + "使用优惠:\n"
                 + discountMathod + "，省" + doubleTrans(reduceMoney) + "元\n";
@@ -141,7 +140,7 @@ public class App {
      * @param discount
      * @return
      */
-    public static String printSection3(double discount) {
+    public static String printTotalSpend(double discount) {
         return "-----------------------------------\n"
                 + "总计：" + doubleTrans(discount) + "元\n"
                 + "===================================";
@@ -176,7 +175,7 @@ public class App {
     }
 
     /**
-     * double去精度
+     * double去掉.0
      *
      * @param d
      * @return
