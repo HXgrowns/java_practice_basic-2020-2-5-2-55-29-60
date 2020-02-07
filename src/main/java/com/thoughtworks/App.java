@@ -24,29 +24,29 @@ public class App {
         String[] itemIds = getItemIds();
         String[] itemNames = getItemNames();
         double[] itemPrices = getItemPrices();
-        double totalSpend = 0.0;
+        double originSpend = 0.0;
         double discountHalf = 0.0;
         String result = "============= 订餐明细 =============\n";
         for (String itemId : itemId2count.keySet()) {
             Integer itemCount = itemId2count.get(itemId);
             for (int i = 0; i < itemIds.length; i++) {
                 if (itemId.equals(itemIds[i])) {
-                    totalSpend += calculatEverySpend(itemCount, itemPrices[i]);
+                    originSpend += calculatEverySpend(itemCount, itemPrices[i]);
                     discountHalf += discountHalfReduce(itemId, itemCount, itemPrices[i]);
                     result += printSelectedItems(itemNames[i], itemCount, calculatEverySpend(itemCount, itemPrices[i]));
                     break;
                 }
             }
         }
-        double discountFull = discountFullReduce(totalSpend);
+        double discountFull = discountFullReduce(originSpend);
 
-        if (discountFull == discountHalf && discountFull == totalSpend) {
-          result += printTotalSpend(totalSpend);
+        if (discountFull == discountHalf && discountFull == originSpend) {
+            result += printTotalSpend(originSpend);
         } else if (discountFull > discountHalf) {
-            result += printDiscountMethod("指定菜品半价(黄焖鸡，凉皮)", (totalSpend - discountHalf));
+            result += printDiscountMethod("指定菜品半价(黄焖鸡，凉皮)", (originSpend - discountHalf));
             result += printTotalSpend(discountHalf);
         } else {
-            result += printDiscountMethod("满30减6元", (totalSpend - discountFull));
+            result += printDiscountMethod("满30减6元", (originSpend - discountFull));
             result += printTotalSpend(discountFull);
         }
         return result;
@@ -118,7 +118,7 @@ public class App {
      * @return
      */
     public static String printSelectedItems(String itemName, Integer itemCount, double itemMoney) {
-        return itemName + " x " + itemCount + " = " + doubleTrans(itemMoney) + "元\n";
+        return String.format("%s x %d = %s元\n", itemName, itemCount, doubleTrans(itemMoney));
     }
 
     /**
@@ -129,9 +129,8 @@ public class App {
      * @return
      */
     public static String printDiscountMethod(String discountMathod, double reduceMoney) {
-        return "-----------------------------------\n"
-                + "使用优惠:\n"
-                + discountMathod + "，省" + doubleTrans(reduceMoney) + "元\n";
+        return String.format("-----------------------------------\n使用优惠:\n%s，省%s元\n",
+                discountMathod, doubleTrans(reduceMoney));
     }
 
     /**
@@ -141,9 +140,8 @@ public class App {
      * @return
      */
     public static String printTotalSpend(double discount) {
-        return "-----------------------------------\n"
-                + "总计：" + doubleTrans(discount) + "元\n"
-                + "===================================";
+        return String.format("-----------------------------------\n总计：%s元\n===================================",
+                doubleTrans(discount));
     }
 
     /**
